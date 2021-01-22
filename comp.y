@@ -32,7 +32,7 @@ int getIdVal(const char* _id);
 %token<fval> VAL_FLOAT
 %token <id> ID
 %type<ival> EXP   
-%token OP_PLUS OP_MINUS OP_MULTIPLY  SP_LEFT SP_RIGHT RETURN   VOID epsilon
+%token OP_PLUS OP_MINUS OP_MULTIPLY  SP_LEFT SP_RIGHT RETURN   VOID epsilon  DEC_INT
 %token SP_P0 SP_P1 SP_B0 SP_B1 SIGN_DOLL SIGN_COM
 %token CMPOP_EE CMPOP_G CMPOP_GE CMPOP_L CMPOP_LE CMPOP_NE
 %token CND_AND CND_OR 
@@ -98,17 +98,31 @@ STMT_ASSIGN : ID ASSIGN EXP SIGN_DOLL {}
 ;
 STMT_RETURN : RETURN EXP SIGN_DOLL {}
 ;
-TYPE : VAL_INT {}
+TYPE : DEC_INT {}
 	| VOID {}
 	;
 %%
 
+
+
+// debug only !!!
+
+void CallInMain();
+
+
+
 int main() {
+
+
+ // comment this .
+ //CallInMain();
+	
 	yyin = stdin;
 
 	do {
 		yyparse();
 	} while(!feof(yyin));
+	
 
 	return 0;
 }
@@ -120,9 +134,13 @@ void yyerror(const char* s) {
 
 
 
+// ************************ DS 
+//******* 
+
+
 // classic MAP<STRING,int> 
 
-
+#pragma region  diction ary 
 
 #define FOUND 0
 
@@ -207,5 +225,144 @@ int getIdVal(const char* _s){
 			return mp_s_i[i].n;
 		}
 }
+
+#pragma endregion diction ary 
+
+
+
+
+
+
+#pragma region  program block 
+
+#define max_arr_size 200
+#define max_op_size 10
+
+
+
+
+
+//   struct  (op,add1,add2,add3)
+
+
+
+
+
+
+
+//************ pb struct 
+
+struct PB {
+	
+    char op[max_op_size];
+    int* add1;
+	int* add2;
+	int* add3;
+};
+
+
+struct PB* _pb_arr[max_arr_size];
+int _cur_pb_arr_ind = 0;
+
+
+
+
+void AddPB(struct PB*  _pb){
+		// check null 
+		if(_pb == NULL){
+			return ;
+		}
+		_pb_arr[_cur_pb_arr_ind++] = _pb;
+		return;
+}
+
+
+
+struct PB*  _make_pb(const char* _op,int* add1,int* add2,int* add3 ){
+	struct PB* _res  = malloc(sizeof(struct PB));
+	//pb.op = _op 
+	  memset(_res->op,'\0',max_op_size);
+	  strcat(_res->op,_op);
+
+
+	_res->add1 = add1;
+	_res->add2 = add2;  
+	_res->add3 = add3;
+
+
+
+	return _res;  
+
+	
+}
+
+
+
+void SetPB(struct PB* _pb,int _ind ){
+	// check null 
+		if(_pb == NULL){
+			return ;
+		}
+	// check for valid index
+		if(_cur_pb_arr_ind <= _ind   || _ind < 0 ){
+			return;
+		}
+
+		_pb_arr[_ind] = _pb;
+
+}
+
+
+
+
+// debug only !!!!
+
+void print_pb(){
+	int i = 0;
+	while(i<_cur_pb_arr_ind){
+		printf(" %s %p %p %p \n",_pb_arr[i]->op,_pb_arr[i]->add1,_pb_arr[i]->add2,_pb_arr[i]->add3);
+		i++;
+	}
+}
+
+
+
+
+
+#pragma endregion program block 
+
+
+
+
+
+#pragma region  debug 
+
+
+void CallInMain(){
+	int* p  = malloc(sizeof(int));
+	AddPB(_make_pb("+",p,p,p));
+	print_pb();
+	SetPB(_make_pb("-",p,p,p),0);
+	print_pb();
+
+
+
+
+
+	exit(0);
+}
+
+
+
+
+
+
+
+
+
+
+#pragma endregion debug 
+
+
 
 

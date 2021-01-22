@@ -17,9 +17,10 @@
 
 [ \t]	; 
 \n		{return SP_NEWLINE;}
-"function"   {return FUNC;}
+
 [0-9]+	{yylval.ival = atoi(yytext); return VAL_INT;}
 [0-9]+\.[0-9]+	{yylval.fval = atof(yytext); return VAL_FLOAT;}
+"int"   {return DEC_INT;}
 [a-z][a-z0-9]*     {yylval.id = (char *)  strdup(yytext); return ID;}
 "+"		{return OP_PLUS;}
 "("		{return SP_P0;}
