@@ -194,25 +194,14 @@ void    lookupId(const char* _s,int _set ) {
 				j++;
 			}
 				mp_s_i[mp_roof].str[j] = '\0';
-			
-			
 			mp_s_i[mp_roof++].n = _set;
 			return _set;
 		}// if  404 
-
 		else {
-			
 			 mp_s_i[i].n = _set;
-			 
 			 return;
-		
 		}
-		
-
-
 	}
-
-
 int getIdVal(const char* _s){
 		int i = findInd(_s);
 		
@@ -225,48 +214,22 @@ int getIdVal(const char* _s){
 			return mp_s_i[i].n;
 		}
 }
-
 #pragma endregion diction ary 
 
 
-
-
-
-
 #pragma region  program block 
-
 #define max_arr_size 200
 #define max_op_size 10
-
-
-
-
-
 //   struct  (op,add1,add2,add3)
-
-
-
-
-
-
-
 //************ pb struct 
-
-struct PB {
-	
+struct PB {	
     char op[max_op_size];
     int* add1;
 	int* add2;
 	int* add3;
 };
-
-
 struct PB* _pb_arr[max_arr_size];
 int _cur_pb_arr_ind = 0;
-
-
-
-
 void AddPB(struct PB*  _pb){
 		// check null 
 		if(_pb == NULL){
@@ -275,29 +238,16 @@ void AddPB(struct PB*  _pb){
 		_pb_arr[_cur_pb_arr_ind++] = _pb;
 		return;
 }
-
-
-
 struct PB*  _make_pb(const char* _op,int* add1,int* add2,int* add3 ){
 	struct PB* _res  = malloc(sizeof(struct PB));
 	//pb.op = _op 
 	  memset(_res->op,'\0',max_op_size);
 	  strcat(_res->op,_op);
-
-
 	_res->add1 = add1;
 	_res->add2 = add2;  
 	_res->add3 = add3;
-
-
-
-	return _res;  
-
-	
+	return _res;  	
 }
-
-
-
 void SetPB(struct PB* _pb,int _ind ){
 	// check null 
 		if(_pb == NULL){
@@ -307,16 +257,9 @@ void SetPB(struct PB* _pb,int _ind ){
 		if(_cur_pb_arr_ind <= _ind   || _ind < 0 ){
 			return;
 		}
-
 		_pb_arr[_ind] = _pb;
-
 }
-
-
-
-
 // debug only !!!!
-
 void print_pb(){
 	int i = 0;
 	while(i<_cur_pb_arr_ind){
@@ -324,20 +267,40 @@ void print_pb(){
 		i++;
 	}
 }
-
-
-
-
-
 #pragma endregion program block 
+#pragma region stack 
+#define STACK_MAX_SIZE  250 
+#define STACK_FULL (_stack_top == STACK_MAX_SIZE -1)
+#define STACK_EMPTY (_stack_top ==  -1)
+
+
+/// int stack 
+
+int _stack_top = -1;
+int _stack_arr[STACK_MAX_SIZE];
 
 
 
-
-
+// put i in top of stack 
+void   Stack_push(int i){
+	if(STACK_FULL){
+		printf("stack error !!! \n ");		
+	}
+	else 
+	_stack_arr[++_stack_top] = i;
+	
+}
+// remove 1 item from top and return it 
+int Stack_pop(){
+	if(STACK_EMPTY){
+		printf("stack error !!! \n ");
+		return 0;
+	}
+	else 
+	return _stack_arr[_stack_top--];
+}
+#pragma endregion stack 
 #pragma region  debug 
-
-
 void CallInMain(){
 	int* p  = malloc(sizeof(int));
 	AddPB(_make_pb("+",p,p,p));
@@ -346,23 +309,15 @@ void CallInMain(){
 	print_pb();
 
 
+	// stack 
+	Stack_push(1);
+	Stack_push(2);
+	Stack_push(3);
 
-
-
+	while(!STACK_EMPTY){
+		printf("stack top : %d \n",Stack_pop());
+	}
 	exit(0);
 }
-
-
-
-
-
-
-
-
-
-
 #pragma endregion debug 
-
-
-
 
